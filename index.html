@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevFlow - Project Management for Developers</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+  <!-- Landing Page -->
+  <div id="landing-page" class="landing-page">
+    <div class="landing-content">
+      <div class="logo-large">
+        <i class="fas fa-code-branch"></i>
+        <h1>DevFlow</h1>
+      </div>
+      <p class="tagline">Project Management Built for Developers</p>
+      <p class="subtitle">Track projects, manage tasks, and boost productivity with a tool designed for developer teams</p>
+      <button class="btn btn-primary btn-large" onclick="showDashboard()">Get Started</button>
+    </div>
+  </div>
+
+  <!-- Main Application -->
+  <div id="main-app" class="main-app hidden">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo">
+          <i class="fas fa-code-branch"></i>
+          <span>DevFlow</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" onclick="toggleTheme()" id="theme-toggle">
+          <i class="fas fa-moon"></i>
+        </button>
+
+        <div class="user-profile">
+          <div class="avatar" id="user-avatar">AC</div>
+          <span id="user-name-display">Alex Chen</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <button class="nav-item active" onclick="navigateTo('overview')">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" onclick="navigateTo('projects')">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
+          </button>
+          <button class="nav-item" onclick="navigateTo('tasks')">
+            <i class="fas fa-list-check"></i>
+            <span>Tasks</span>
+          </button>
+          <button class="nav-item" onclick="navigateTo('analytics')">
+            <i class="fas fa-chart-bar"></i>
+            <span>Analytics</span>
+          </button>
+          <button class="nav-item" onclick="navigateTo('snippets')">
+            <i class="fas fa-code"></i>
+            <span>Code Snippets</span>
+          </button>
+          <button class="nav-item" onclick="navigateTo('github')">
+            <i class="fab fa-github"></i>
+            <span>GitHub</span>
+          </button>
+          <button class="nav-item" onclick="navigateTo('settings')">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Dashboard Overview -->
+        <section id="overview-section" class="content-section active">
+          <div class="section-header">
+            <h2 id="welcome-message">Welcome back, Alex! 👋</h2>
+            <p class="text-secondary">Here's what's happening with your projects today</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card" style="--card-color: #3b82f6">
+              <div class="stat-icon">
+                <i class="fas fa-folder"></i>
+              </div>
+              <div class="stat-info">
+                <h3>3</h3>
+                <p>Active Projects</p>
+              </div>
+            </div>
+            <div class="stat-card" style="--card-color: #f59e0b">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-info">
+                <h3>8</h3>
+                <p>Pending Tasks</p>
+              </div>
+            </div>
+            <div class="stat-card" style="--card-color: #10b981">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3>45</h3>
+                <p>Completed</p>
+              </div>
+            </div>
+            <div class="stat-card" style="--card-color: #8b5cf6">
+              <div class="stat-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="stat-info">
+                <h3>92%</h3>
+                <p>Productivity</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>Recent Activity</h3>
+              </div>
+              <div class="card-body">
+                <div class="activity-timeline" id="activity-timeline"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Upcoming Deadlines</h3>
+              </div>
+              <div class="card-body">
+                <div class="deadline-list" id="deadline-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects-section" class="content-section">
+          <div class="section-header">
+            <h2>Projects</h2>
+            <button class="btn btn-primary" onclick="showAddProjectModal()">
+              <i class="fas fa-plus"></i> New Project
+            </button>
+          </div>
+
+          <div class="projects-grid" id="projects-grid"></div>
+
+          <!-- Kanban Board -->
+          <div id="kanban-view" class="kanban-container hidden">
+            <div class="kanban-header">
+              <button class="btn btn-secondary" onclick="hideKanban()">
+                <i class="fas fa-arrow-left"></i> Back to Projects
+              </button>
+              <h3 id="kanban-project-name"></h3>
+              <button class="btn btn-primary" onclick="showAddTaskModal()">
+                <i class="fas fa-plus"></i> Add Task
+              </button>
+            </div>
+            <div class="kanban-board" id="kanban-board">
+              <div class="kanban-column" data-status="todo">
+                <div class="column-header">
+                  <h4>To Do</h4>
+                  <span class="task-count" id="count-todo">0</span>
+                </div>
+                <div class="column-tasks" id="tasks-todo"></div>
+              </div>
+              <div class="kanban-column" data-status="in-progress">
+                <div class="column-header">
+                  <h4>In Progress</h4>
+                  <span class="task-count" id="count-in-progress">0</span>
+                </div>
+                <div class="column-tasks" id="tasks-in-progress"></div>
+              </div>
+              <div class="kanban-column" data-status="in-review">
+                <div class="column-header">
+                  <h4>In Review</h4>
+                  <span class="task-count" id="count-in-review">0</span>
+                </div>
+                <div class="column-tasks" id="tasks-in-review"></div>
+              </div>
+              <div class="kanban-column" data-status="done">
+                <div class="column-header">
+                  <h4>Done</h4>
+                  <span class="task-count" id="count-done">0</span>
+                </div>
+                <div class="column-tasks" id="tasks-done"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tasks Section -->
+        <section id="tasks-section" class="content-section">
+          <div class="section-header">
+            <h2>All Tasks</h2>
+            <div class="filter-controls">
+              <select class="form-select" id="filter-priority" onchange="filterTasks()">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <select class="form-select" id="filter-status" onchange="filterTasks()">
+                <option value="all">All Status</option>
+                <option value="todo">To Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="in-review">In Review</option>
+                <option value="done">Done</option>
+              </select>
+              <select class="form-select" id="sort-tasks" onchange="filterTasks()">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="priority">Priority</option>
+                <option value="deadline">Deadline</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="progress-overview">
+            <div class="progress-info">
+              <span>Overall Progress</span>
+              <span id="progress-percentage">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="tasks-list" id="tasks-list"></div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics-section" class="content-section">
+          <div class="section-header">
+            <h2>Analytics &amp; Insights</h2>
+          </div>
+
+          <div class="analytics-grid">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Tasks Completed Over Time</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="tasks-chart" style="max-height: 300px;"></canvas>
+              </div>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Project Status Distribution</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="status-chart" style="max-height: 300px;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <i class="fas fa-clock"></i>
+              <h4>Avg. Completion Time</h4>
+              <p class="metric-value">2.3 days</p>
+            </div>
+            <div class="metric-card">
+              <i class="fas fa-calendar-check"></i>
+              <h4>Tasks This Week</h4>
+              <p class="metric-value">27</p>
+            </div>
+            <div class="metric-card">
+              <i class="fas fa-percentage"></i>
+              <h4>On-Time Rate</h4>
+              <p class="metric-value">85%</p>
+            </div>
+            <div class="metric-card">
+              <i class="fas fa-chart-line"></i>
+              <h4>Productivity Score</h4>
+              <p class="metric-value">92/100</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Code Snippets Section -->
+        <section id="snippets-section" class="content-section">
+          <div class="section-header">
+            <h2>Code Snippets</h2>
+            <button class="btn btn-primary" onclick="showAddSnippetModal()">
+              <i class="fas fa-plus"></i> New Snippet
+            </button>
+          </div>
+
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search snippets..." id="snippet-search" oninput="filterSnippets()">
+          </div>
+
+          <div class="snippets-grid" id="snippets-grid"></div>
+        </section>
+
+        <!-- GitHub Section -->
+        <section id="github-section" class="content-section">
+          <div class="section-header">
+            <h2>GitHub Integration</h2>
+            <button class="btn btn-primary">
+              <i class="fab fa-github"></i> Connect Repository
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Recent Commits</h3>
+            </div>
+            <div class="card-body">
+              <div class="commits-list" id="commits-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings-section" class="content-section">
+          <div class="section-header">
+            <h2>Settings</h2>
+          </div>
+
+          <div class="settings-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>Profile Information</h3>
+              </div>
+              <div class="card-body">
+                <div class="profile-form">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-input" id="settings-name-input">
+                  </div>
+                  <div class="form-group">
+                    <label>Profile Picture (Optional)</label>
+                    <input type="file" class="form-input" id="profile-picture-input" accept="image/*" onchange="handleProfilePictureUpload(event)">
+                    <p class="text-secondary" style="font-size: 12px; margin-top: 4px;">Upload a custom profile picture or leave empty to use initials</p>
+                  </div>
+                  <button class="btn btn-primary" onclick="updateProfileName()">Save Changes</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Preferences</h3>
+              </div>
+              <div class="card-body">
+
+                <div class="preference-item">
+                  <div>
+                    <h4>Dark Mode</h4>
+                    <p class="text-secondary">Use dark theme interface</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle" onchange="toggleTheme()">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal: Name Input -->
+  <div id="name-input-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Welcome to DevFlow!</h3>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary" style="margin-bottom: 16px;">Please enter your name to get started</p>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" class="form-input" id="user-name-input" placeholder="Enter your name" autofocus>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="cancelNameInput()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitName()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add/Edit Project -->
+  <div id="project-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="project-modal-title">Add New Project</h3>
+        <button class="close-btn" onclick="closeModal('project-modal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Project Name *</label>
+          <input type="text" class="form-input" id="project-name" placeholder="Enter project name">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-input" id="project-description" rows="3" placeholder="Enter project description"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Priority *</label>
+            <select class="form-select" id="project-priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Deadline</label>
+            <input type="date" class="form-input" id="project-deadline">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Attach Files</label>
+          <input type="file" class="form-input" id="project-files" multiple>
+          <p class="text-secondary" style="font-size: 12px; margin-top: 4px;">You can select multiple files (Max 10MB total)</p>
+        </div>
+        <div id="project-files-list" class="files-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('project-modal')">Cancel</button>
+        <button class="btn btn-primary" id="project-submit-btn" onclick="submitProject()">Add Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Task -->
+  <div id="add-task-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Task</h3>
+        <button class="close-btn" onclick="closeModal('add-task-modal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Task Title</label>
+          <input type="text" class="form-input" id="task-title" placeholder="Enter task title">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-input" id="task-description" rows="3" placeholder="Enter task description"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Priority</label>
+            <select class="form-select" id="task-priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Deadline</label>
+            <input type="date" class="form-input" id="task-deadline">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Assigned To</label>
+          <input type="text" class="form-input" id="task-assigned" placeholder="Team member name">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('add-task-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
