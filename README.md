@@ -310,5 +310,4 @@ Your modern developer project management app is ready to use. Organize your proj
 
 ---
 
-*Created with ❤️ for developers, by developers.*  
-*Last Updated: November 2025*
+*Created with ❤️ for developers, by M R Darshan.*
