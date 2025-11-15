@@ -49,9 +49,8 @@ DevFlow is a beautiful, fully-functional single-page web application designed fo
 
 ### 1. Open the App
 
-1. Extract the `devflow-pm.zip` file
-2. Open `index.html` in your web browser
-3. Or use a local server:
+1. Open `index.html` in your web browser
+2. Or use a local server:
    ```bash
    # Using Python
    python -m http.server 8000
@@ -62,7 +61,7 @@ DevFlow is a beautiful, fully-functional single-page web application designed fo
    # Using VS Code Live Server
    # Right-click index.html → Open with Live Server
    ```
-4. Visit `http://localhost:8000` (or your server port)
+3. Visit `http://localhost:8000` (or your server port)
 
 ### 2. First Time Setup
 
